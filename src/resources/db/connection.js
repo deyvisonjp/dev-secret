@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
+require('dotenv').config();
 
 let connection = null
 
-const URI = 'mongodb+srv://admin:PjInkhZTqEZaXZC3@cluster0.0t9nw.mongodb.net/dev-secret?retryWrites=true&w=majority'
+const URI = process.env.DATABASE_CONNECTION_STRING;
 
 module.exports = async () => {
   if (!connection) {
