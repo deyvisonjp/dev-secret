@@ -18,3 +18,6 @@
 ### Base de dados MongoDB (mongodb atlas)
   - Instalar ORM mongoose 
   ` npm install mongoose --save `
+
+**Criação de id (Hashs)**
+  ` npm install uuid `
