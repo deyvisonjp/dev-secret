@@ -1,4 +1,4 @@
-## Semana Dev Week
+## SEMANA DEV WEEK - DEV-SECRET (BACKEND)
 
 **Criação de um 'sisteminha' para sorteio de amigo oculto**
 
@@ -23,7 +23,7 @@
   ` npm install uuid `
   
 --------------------------------------------------------------------------------
-## SEMANA DEV WEEK - DEV-SECRET (FRONT)
+## SEMANA DEV WEEK - DEV-SECRET (FRONTEND)
 
 Projeto criado durante a semana dev week . . .    
 Parte 2: Frontend com React e Next
@@ -35,3 +35,4 @@ Parte 2: Frontend com React e Next
   - Configuração do _document e da _app
   - Configuração do Tema (Theme.js)
 
+- Criaçao de .babelrc customizado para evitar erros com styledComponents
