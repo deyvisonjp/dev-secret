@@ -25,10 +25,10 @@ module.exports.create = async (event, context) => {
             email,
           }
         }
-      } 
+      }
     )
-    
-    if(!result.nModified) {
+
+    if (!result.nModified) {
       throw new Error()
     }
 
@@ -54,7 +54,32 @@ module.exports.create = async (event, context) => {
 module.exports.delete = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
+  const { id: secretId, participantId } = event.pathParameters;
+  const adminKey = event.headers['admin-key'];
+
   try {
+
+    const result = await SecretModel.updateOne(
+      { // Faz o filtro, é necessário as duas cariaveis
+        externalId: secretId,
+        adminKey,
+      },
+      { // Alteração dentro do array
+        $pull: {
+          participants: {
+            externalId: participantId,
+          }
+        }
+      }
+    )
+
+    if (!result.nModified) {
+      throw new Error()
+    }
+
+    return {
+      statusCode: 204,
+    }
 
   } catch (error) {
     return {
