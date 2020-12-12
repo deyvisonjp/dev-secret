@@ -2,7 +2,8 @@ const { v4: uuidv4 } = require('uuid');
 
 require('../resources/db/connection')();
 
-const SecretModel = require('../resources/db/models/Secret')
+const SecretModel = require('../resources/db/models/Secret');
+const draw = require('../utlis/draw');
 
 module.exports.create = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false; //Lambda reultlizar conexão
@@ -48,7 +49,7 @@ module.exports.get = async (event, context) => {
   try {
     const { participants, adminKey, drawResult } = await SecretModel.findOne({
       externalId,
-    }).select('-_id participants adminKey drawResult').lean()
+    }).select('-_id participants adminKey drawResult').lean() //lean: limpa após a busca
 
     // !! -> Obriga a sentença a retornar um booleano
     // Nesse Caso, testamos primeiro se adminKey não está vazio 
@@ -81,7 +82,46 @@ module.exports.get = async (event, context) => {
 module.exports.draw = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
+  const { id: externalId } = event.pathParameters;
+  const adminKey = event.headers['admin-key']
+
   try {
+
+    const secret = await SecretModel.findOne({
+      externalId,
+      adminKey,
+    }).select('participants ownerEmail').lean()
+
+    if(!secret) {
+      throw new Error();
+    }
+
+    const drawResult = draw(secret.participants);
+    const drawMap = drawResult.map((result) => {
+      return {
+        giver: result.giver.externalId,
+        receiver: result.receiver.externalId,
+      }
+    })   
+    
+    await SecretModel.updateOne(
+      {
+        _id: secret._id,
+      },
+      {
+        drawResult: drawMap,
+      }
+    )
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(
+        {
+          drawResult,
+          sucess: true,
+        }
+      )
+    }
 
   } catch (error) {
     return {
