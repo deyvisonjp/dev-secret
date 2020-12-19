@@ -10,3 +10,5 @@ Parte 2: Frontend com React e Next
   - Configuração do _document e da _app
   - Configuração do Tema (Theme.js)
 
+**_Para executar: `npm run dev`_**
+
